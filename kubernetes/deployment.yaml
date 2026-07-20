@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: notification-service
-  namespace: taskmanager
+  namespace: microservices
   labels:
     app: notification-service
 spec:
