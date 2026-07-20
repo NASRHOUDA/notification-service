@@ -37,7 +37,7 @@ if (require.main === module) {
       });
     })
     .catch((err) => {
-      console.error("❌ Sync error:", err.message);
+      console.error("❌ Sync error:", err.name, err.message, err.stack);
       process.exit(1);
     });
 }
