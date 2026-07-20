@@ -3,6 +3,7 @@ const express = require("express");
 const helmet = require("helmet");
 const client = require("prom-client");
 const { startDeadlineChecker, checkOverdueTasks } = require("./services/deadlineChecker");
+const { sequelize } = require("./models");
 
 const app = express();
 app.use(helmet());
@@ -27,10 +28,18 @@ app.post("/trigger-check", async (req, res) => {
 const PORT = process.env.PORT || 5004;
 
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`🔔 Notification-service démarré sur le port ${PORT}`);
-    startDeadlineChecker();
-  });
+  sequelize.sync({ alter: true })
+    .then(() => {
+      console.log("✅ NotificationLog model synchronized");
+      app.listen(PORT, () => {
+        console.log(`🔔 Notification-service démarré sur le port ${PORT}`);
+        startDeadlineChecker();
+      });
+    })
+    .catch((err) => {
+      console.error("❌ Sync error:", err.message);
+      process.exit(1);
+    });
 }
 
 module.exports = app;
