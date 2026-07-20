@@ -1,6 +1,7 @@
 const cron = require("node-cron");
 const axios = require("axios");
 const { sendDeadlineExceededEmail } = require("./mailer");
+const { NotificationLog } = require("../models");
 
 const GATEWAY_URL = process.env.GATEWAY_URL;
 const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY;
@@ -35,10 +36,23 @@ async function checkOverdueTasks() {
       await sendDeadlineExceededEmail(task, user);
 
       await internalClient.patch(`/internal/tasks/${task.id}/alert-sent`);
+      await NotificationLog.create({
+        taskId: task.id,
+        type: "overdue",
+        email: user.email,
+        status: "sent",
+      });
 
       console.log(`📧 Alerte envoyée pour la tâche "${task.title}" (id: ${task.id})`);
     } catch (err) {
       console.error(`❌ Échec traitement tâche ${task.id}:`, err.message);
+      await NotificationLog.create({
+        taskId: task.id,
+        type: "overdue",
+        email: task.email || "unknown",
+        status: "failed",
+        error: err.message,
+      }).catch(() => {});
     }
   }
 }
