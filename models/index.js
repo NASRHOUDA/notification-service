@@ -17,8 +17,5 @@ const sequelize = new Sequelize(
 
 const NotificationLog = require("./NotificationLog")(sequelize);
 
-sequelize.sync({ alter: true })
-  .then(() => console.log("✅ NotificationLog model synchronized"))
-  .catch(err => console.error("❌ Sync error:", err.message));
 
 module.exports = { sequelize, NotificationLog };
