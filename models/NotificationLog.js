@@ -42,3 +42,4 @@ module.exports = function defineNotificationLogModel(sequelize) {
 
   return NotificationLog;
 };
+
