@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 
-module.exports = (sequelize) => {
+module.exports = function defineNotificationLogModel(sequelize) {
   const NotificationLog = sequelize.define(
     "NotificationLog",
     {
