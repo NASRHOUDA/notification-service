@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: notification-service
-        image: houdanasr/notification-service:7
+        image: houdanasr/notification-service:9
         ports:
         - containerPort: 5004
         env:
